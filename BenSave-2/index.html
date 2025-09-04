@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bensave - Your Money Saving Partner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="attached_assets/generated_images/Bensave_app_logo_design_94ba6e60.png" alt="Bensave Logo" class="logo">
+            <h1>Bensave</h1>
+        </div>
+        <div class="balance-display">
+            <span class="balance-label">Current Balance</span>
+            <span class="balance-amount" id="currentBalance">₵0.00</span>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <button class="nav-btn active" onclick="showTab('budget')">Budget</button>
+        <button class="nav-btn" onclick="showTab('mobile-money')">Mobile Money</button>
+        <button class="nav-btn" onclick="showTab('savings')">Savings</button>
+        <button class="nav-btn" onclick="showTab('converter')">Currency Converter</button>
+    </nav>
+
+    <!-- Budget Tab -->
+    <div id="budget" class="tab-content active">
+        <div class="container">
+            <div class="card">
+                <h2>Weekly Budget</h2>
+                <div class="budget-form">
+                    <div class="form-group">
+                        <label for="weeklyBudget">Set Weekly Budget (₵)</label>
+                        <input type="number" id="weeklyBudget" placeholder="Enter amount in Cedis" min="0" step="0.01">
+                    </div>
+                    <button onclick="setBudget()" class="btn-primary">Set Budget</button>
+                </div>
+
+                <div class="budget-display" id="budgetDisplay" style="display: none;">
+                    <div class="budget-stats">
+                        <div class="stat">
+                            <span class="stat-label">Weekly Budget</span>
+                            <span class="stat-value" id="weeklyBudgetAmount">₵0.00</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Spent This Week</span>
+                            <span class="stat-value" id="weeklySpent">₵0.00</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Remaining</span>
+                            <span class="stat-value" id="budgetRemaining">₵0.00</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="budgetProgress"></div>
+                    </div>
+                    <div class="budget-status" id="budgetStatus"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Add Expense</h3>
+                <div class="expense-form">
+                    <div class="form-group">
+                        <label for="expenseAmount">Amount (₵)</label>
+                        <input type="number" id="expenseAmount" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDescription">Description</label>
+                        <input type="text" id="expenseDescription" placeholder="What did you buy?">
+                    </div>
+                    <button onclick="addExpense()" class="btn-secondary">Add Expense</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Money Tab -->
+    <div id="mobile-money" class="tab-content">
+        <div class="container">
+            <div class="mobile-money-options">
+                <div class="provider-card mtn" onclick="selectProvider('mtn')">
+                    <h3>MTN Mobile Money</h3>
+                    <p>Deposit & Withdraw</p>
+                </div>
+                <div class="provider-card telecel" onclick="selectProvider('telecel')">
+                    <h3>Telecel Cash</h3>
+                    <p>Deposit & Withdraw</p>
+                </div>
+                <div class="provider-card airtel-tigo" onclick="selectProvider('airtel-tigo')">
+                    <h3>AirtelTigo Money</h3>
+                    <p>Deposit & Withdraw</p>
+                </div>
+            </div>
+
+            <div class="mobile-money-form" id="mobileMoneyForm" style="display: none;">
+                <div class="card">
+                    <h3 id="providerTitle">Mobile Money Transaction</h3>
+                    <div class="transaction-tabs">
+                        <button class="tab-btn active" onclick="setTransactionType('deposit')">Deposit</button>
+                        <button class="tab-btn" onclick="setTransactionType('withdraw')">Withdraw</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" placeholder="0xxxxxxxxx">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transactionAmount">Amount (₵)</label>
+                        <input type="number" id="transactionAmount" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="info-message">
+                        <p>📱 You will receive a prompt on your phone to approve this transaction</p>
+                    </div>
+                    
+                    <button onclick="processMobileMoneyTransaction()" class="btn-primary" id="transactionBtn">Deposit Money</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Savings Tab -->
+    <div id="savings" class="tab-content">
+        <div class="container">
+            <div class="card">
+                <h2>Savings Goal</h2>
+                <div class="savings-form">
+                    <div class="form-group">
+                        <label for="savingsGoal">Set Savings Goal (₵)</label>
+                        <input type="number" id="savingsGoal" placeholder="Enter target amount" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="savingsDeadline">Target Date</label>
+                        <input type="date" id="savingsDeadline">
+                    </div>
+                    <button onclick="setSavingsGoal()" class="btn-primary">Set Goal</button>
+                </div>
+
+                <div class="savings-display" id="savingsDisplay" style="display: none;">
+                    <div class="savings-stats">
+                        <div class="stat">
+                            <span class="stat-label">Target Amount</span>
+                            <span class="stat-value" id="targetAmount">₵0.00</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Saved So Far</span>
+                            <span class="stat-value" id="savedAmount">₵0.00</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Remaining</span>
+                            <span class="stat-value" id="remainingAmount">₵0.00</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="savingsProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Converter Tab -->
+    <div id="converter" class="tab-content">
+        <div class="container">
+            <div class="card">
+                <h2>Currency Converter</h2>
+                <p class="converter-subtitle">Convert foreign currencies to Ghana Cedis (₵)</p>
+                
+                <div class="converter-form">
+                    <div class="form-group">
+                        <label for="fromCurrency">From Currency</label>
+                        <select id="fromCurrency">
+                            <option value="USD">🇺🇸 US Dollar (USD)</option>
+                            <option value="EUR">🇪🇺 Euro (EUR)</option>
+                            <option value="GBP">🇬🇧 British Pound (GBP)</option>
+                            <option value="NGN">🇳🇬 Nigerian Naira (NGN)</option>
+                            <option value="ZAR">🇿🇦 South African Rand (ZAR)</option>
+                            <option value="CAD">🇨🇦 Canadian Dollar (CAD)</option>
+                            <option value="AUD">🇦🇺 Australian Dollar (AUD)</option>
+                            <option value="JPY">🇯🇵 Japanese Yen (JPY)</option>
+                            <option value="CNY">🇨🇳 Chinese Yuan (CNY)</option>
+                            <option value="INR">🇮🇳 Indian Rupee (INR)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="convertAmount">Amount</label>
+                        <input type="number" id="convertAmount" placeholder="Enter amount to convert" min="0" step="0.01" value="1">
+                    </div>
+                    
+                    <button onclick="convertCurrency()" class="btn-primary">Convert to Cedis</button>
+                </div>
+                
+                <div class="conversion-result" id="conversionResult" style="display: none;">
+                    <div class="result-display">
+                        <div class="conversion-info">
+                            <span class="from-amount" id="fromAmount">1.00 USD</span>
+                            <span class="equals">=</span>
+                            <span class="to-amount" id="toAmount">₵11.89</span>
+                        </div>
+                        <div class="exchange-rate">
+                            <small id="exchangeRateInfo">1 USD = 11.89 GHS</small>
+                        </div>
+                        <div class="rate-updated">
+                            <small id="lastUpdated">Rates updated: Today</small>
+                        </div>
+                    </div>
+                    
+                    <button onclick="addConvertedAmount()" class="btn-secondary">Add ₵<span id="convertedValue">11.89</span> to Balance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Alert</h3>
+            <p id="modalMessage">Message</p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Contact Information</h4>
+                <p><strong>Email:</strong> <a href="mailto:davidabentley18@gmail.com">davidabentley18@gmail.com</a></p>
+                <p><strong>Phone:</strong> <a href="tel:+233541408347">0541408347</a></p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>About Bensave</h4>
+                <p>Your trusted money saving partner for smart budgeting and financial growth in Ghana.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Support</h4>
+                <p>Need help? Contact us for support with your budget and savings goals.</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Bensave. All rights reserved. | Developed with ❤️ for Ghana</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
